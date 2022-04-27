@@ -5,11 +5,11 @@ SELECT EMPLOYEE_ID AS 사번
 	 , FIRST_NAME AS 이름
 	 , LAST_NAME AS 성
 	 , DEPARTMENT_ID AS 부서
-	 FROM EMPLOYEES
- ORDER BY DEPARTMENT_ID DESC NULLS LAST, 이름 DESC;
+  FROM EMPLOYEES
+ ORDER BY DEPARTMENT_ID ASC, 이름 ASC;
  
 --ASC 오름차순, DESC 내림차순
---NULLS LAST는 NULL은 마지막에 써준다
+--NULLS LAST는 NULL은 마지막에 써준다 NULLS FIRST도있고 아무것도 안쓰면 NULL이 마지막에(NULLS LAST가 디폴트값인듯 하다)
 --별칭으로 바꾼뒤에 별칭을 써도, 원래이름을 써도 둘다 가능!
 
 SELECT DEPARTMENT_ID
@@ -34,7 +34,7 @@ SELECT COUNT(*)
 
 --★★1980,1990,2000년대 별로 그룹을 묶어서 평균급여와 총인원수를 구한다.
 SELECT TRUNC(EXTRACT(YEAR FROM HIRE_DATE), -1) AS 년도
- 	 , AVG(SALARY) AS 평균급여
+ 	 , FLOOR(AVG(SALARY)) AS 평균급여
  	 , COUNT(*) AS 인원
   FROM EMPLOYEES
  GROUP BY TRUNC(EXTRACT(YEAR FROM HIRE_DATE), -1);
@@ -93,7 +93,7 @@ SELECT DEPARTMENT_ID AS 부서
  	 , SUBSTR(PHONE_NUMBER,1,3)
  ORDER BY DEPARTMENT_ID;
  
-ROLLUP, CUBE
+ROLLUP, CUBE 함수 설명
 	그룹별 산출한 결과에 대해서 추가 집계를 수행하는 함수.
 	
 SELECT DEPARTMENT_ID
@@ -109,7 +109,7 @@ SELECT DEPARTMENT_ID
   FROM EMPLOYEES
  GROUP BY ROLLUP(DEPARTMENT_ID, JOB_ID);
  ORDER BY 1;
-/*위2개의 함수의 차이는 마지막줄에 NULL 카운트된것의 총합(그룹 별 산출한 결과 값의 집계를 계산)이 나온다.
+/*위2개의 함수의 차이는 GROUP BY 마다 NULL로 해당 컬럼의 개수를 체크 + 마지막줄에 NULL 카운트된것의 총합(그룹 별 산출한 결과 값의 집계를 계산)이 나온다.
 
 아래처럼 집계를 한다. CUBE는 사용가능한 모든 집계를 한뒤 출력
 ROLLUP  CUBE
@@ -122,32 +122,44 @@ ALL       B C
             C
         ALL
 */
+--★★★
 SELECT DEPARTMENT_ID
 	 , JOB_ID 
 	 , COUNT(*)
-	 , CASE WHEN GROUPING(DEPARTMENT_ID) = 0 AND GROUPING(JOB_ID) = 0 THEN '부서/직급별 합계'
-	        WHEN GROUPING(DEPARTMENT_ID) = 0 AND GROUPING(JOB_ID) = 1 THEN '부서별 집계'
-	        WHEN GROUPING(DEPARTMENT_ID) = 1 AND GROUPING(JOB_ID) = 0 THEN '직급별 합계'
-	        WHEN GROUPING(DEPARTMENT_ID) = 1 AND GROUPING(JOB_ID) = 1 THEN '총 집계'
+	 , CASE WHEN GROUPING(DEPARTMENT_ID) = 0 AND GROUPING(JOB_ID) = 0 THEN '부서/직급별 합계' -- 둘다 NULL이 아님
+	        WHEN GROUPING(DEPARTMENT_ID) = 0 AND GROUPING(JOB_ID) = 1 THEN '부서별 집계' -- JOB_ID 가 NULL
+	        WHEN GROUPING(DEPARTMENT_ID) = 1 AND GROUPING(JOB_ID) = 0 THEN '직급별 합계' -- DEPARTMENT_ID 가 NULL
+	        WHEN GROUPING(DEPARTMENT_ID) = 1 AND GROUPING(JOB_ID) = 1 THEN '총 집계' -- 둘다 NULL
 	   END AS 집계구분
   FROM EMPLOYEES
  WHERE DEPARTMENT_ID IS NOT NULL
  GROUP BY CUBE(DEPARTMENT_ID, JOB_ID);
  ORDER BY 1;
  
---무엇을 나타내고자하는 식인가요?
---
-SELECT DEPARTMENT_ID , JOB_ID , SUM(SALARY)
-FROM EMPLOYEES
-GROUP BY ROLLUP(DEPARTMENT_ID, JOB_ID)
-ORDER BY 1;
-
---무엇을 나타내고자하는 식인가요?
+--무엇을 나타내고자하는 식인가요? (아래 두개와의 차이점은?)
 --
 SELECT DEPARTMENT_ID, JOB_ID, SUM(SALARY)
 FROM EMPLOYEES
-GROUP BY CUBE(DEPARTMENT_ID, JOB_ID)
+GROUP BY DEPARTMENT_ID, JOB_ID
 ORDER BY 1;
+
+--무엇을 나타내고자하는 식인가요? (위 아래 와의 차이점은?)
+--부서아이디별, 잡아이디별 
+SELECT DEPARTMENT_ID 
+	 , JOB_ID 
+	 , SUM(SALARY)
+  FROM EMPLOYEES
+ GROUP BY ROLLUP(DEPARTMENT_ID, JOB_ID)
+ ORDER BY 1;
+
+--무엇을 나타내고자하는 식인가요? (위 두개와의 차이점은?)
+-- 위의 그리드에서 아이디별로 나뉜 잡아이디의 급여 합계를 보여주는 행 추가, 부서별아이디와 상관없이 잡아이디로 구분한 급여합계까지 같이 보여줌
+SELECT DEPARTMENT_ID
+	 , JOB_ID
+	 , SUM(SALARY)
+  FROM EMPLOYEES
+ GROUP BY CUBE(DEPARTMENT_ID, JOB_ID)
+ ORDER BY 1;
 
 --무엇을 나타내고자하는 식인가요?
 --
@@ -158,13 +170,6 @@ UNION
 SELECT DEPARTMENT_ID, JOB_ID, SUM(SALARY)
 FROM EMPLOYEES
 GROUP BY ROLLUP(DEPARTMENT_ID, JOB_ID)
-ORDER BY 1;
-
---무엇을 나타내고자하는 식인가요?
---
-SELECT DEPARTMENT_ID, JOB_ID, SUM(SALARY)
-FROM EMPLOYEES
-GROUP BY CUBE(DEPARTMENT_ID, JOB_ID)
 ORDER BY 1;
 
 --무엇을 나타내고자하는 식인가요?
