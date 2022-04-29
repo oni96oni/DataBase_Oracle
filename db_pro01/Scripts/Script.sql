@@ -124,3 +124,6 @@ SELECT * FROM REGIONS;
 
 --기본키: 해당 테이블에서 유일하게 사용하는 값; 중복값이 없다. 유일한 값만 가지게함
 --외래키: 참조값
+
+
+SELECT * FROM USER_ALL_TABLES;
