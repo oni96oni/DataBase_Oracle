@@ -150,8 +150,7 @@
 					"oracle.meta-search-in-synonyms": "false",
 					"@dbeaver-sid-service@": "SERVICE"
 				},
-				"auth-model": "oracle_native",
-				"handlers": {}
+				"auth-model": "oracle_native"
 			}
 		}
 	},
@@ -160,7 +159,7 @@
 			"name": "Development",
 			"color": "255,255,255",
 			"description": "Regular development database",
-			"auto-commit": true,
+			"auto-commit": false,
 			"confirm-execute": false,
 			"confirm-data-change": false,
 			"auto-close-transactions": false
