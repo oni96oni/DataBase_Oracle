@@ -179,8 +179,7 @@
 					"oracle.meta-search-in-synonyms": "false",
 					"@dbeaver-sid-service@": "SERVICE"
 				},
-				"auth-model": "oracle_native",
-				"handlers": {}
+				"auth-model": "oracle_native"
 			}
 		}
 	},
