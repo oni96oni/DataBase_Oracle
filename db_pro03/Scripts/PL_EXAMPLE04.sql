@@ -1,0 +1,70 @@
+/*
+	프로시져(PROCEDURE)
+		-PL/SQL을 사용하여 DBMS시스템에서 실행할 프로그램을 만들기 위해 사용하는 객체
+		-반복되는 작업 및 복잡한 SQL 구문을 프로시져로 저장하여 재사용하는 용도로 사용될 수 있다./
+		-DBMS에 컴파일 된 상태로 저장되고 동작하기 때문에 기존 SQL 스크립트 보다는 빠른 동작을 기대할 수 있다.
+*/
+
+CREATE TABLE EMP_DUP 
+AS SELECT * FROM EMPLOYEE;
+
+CREATE OR REPLACE PROCEDURE PROC_TEST
+IS 
+BEGIN 
+	DBMS_OUTPUT.PUT_LINE('Hello Procedure');
+END;
+
+
+BEGIN --위에처럼 긴 내용을 아래처럼 짧게 만들어줄 수 있다!
+	PROC_TEST;
+END;
+
+DROP PROCEDURE PROC_TEST;
+
+
+CREATE OR REPLACE PROCEDURE PROC_INOUT_TEST(n1 IN NUMBER, n2 OUT NUMBER) --IN은 입력용 OUT은 반환용
+IS 
+BEGIN 
+	DBMS_OUTPUT.PUT_LINE('n1 -> ' || n1);
+	n2 := 10;
+END;
+
+
+DECLARE
+	num NUMBER;
+BEGIN
+	PROC_INOUT_TEST(20, num); --바인딩이 되어서 num에 10 저장
+	DBMS_OUTPUT.PUT_LINE('num -> ' || num);
+END;
+
+
+CREATE TABLE TEST_TABLE(
+	   ID NUMBER
+	 , I_DATE DATE
+);
+
+CREATE SEQUENCE TEST_SEQ NOCACHE;
+
+CREATE OR REPLACE PROCEDURE PROC_INSERT_TEST(
+	 	max_num IN NUMBER
+	,	res_cnt OUT NUMBER
+)
+IS
+BEGIN
+	FOR I IN 1..max_num LOOP 
+		INSERT INTO TEST_TABLE VALUES(TEST_SEQ.NEXTVAL, SYSDATE);
+		res_cnt := res_cnt + 1;
+	END LOOP;
+	COMMIT;
+END;
+
+DECLARE
+	res_cnt NUMBER;
+BEGIN
+	PROC_INSERT_TEST(10, res_cnt);
+	DBMS_OUTPUT.PUT_LINE(res_cnt + '개 행이 반영되었습니다.');
+END;
+
+SELECT * FROM TEST_TABLE;
+
+SELECT * FROM ALL_ERRORS WHERE NAME = 'PROC_INSERT_TEST';
