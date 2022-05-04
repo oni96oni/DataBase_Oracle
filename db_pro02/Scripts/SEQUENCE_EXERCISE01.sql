@@ -73,7 +73,7 @@ INSERT INTO USER_ACCOUNT VALUES (USER_ID.NEXTVAL,'마이콜','ENFFL1','마이콜
 INSERT INTO USER_INFO VALUES (USER_ID.NEXTVAL,'M','35','마이콜@NAVER.COM','아프리카','01059594949');
 
 /*
-	5.VIEW를 만들어서 두개의 테이블 정보가 모두 조회될 수 있도록 한다 성별에 관해서는 남성, 여성으로 변환되게 하며, 패스워드는 *문자로 마스킹한다.
+	5.VIEW를 만들어서 두개의 테이블 정보가 모두 조회될 수 있도록 한다 성별에 관해서는 남성, 여성으로 변환되게 하며, 패스워드는 문자로 마스킹한다.
 */
 
 CREATE OR REPLACE VIEW V_USER_ACCOUNT
