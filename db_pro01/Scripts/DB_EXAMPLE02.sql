@@ -47,7 +47,7 @@ SELECT SUBSTR('sample@example.com', 1, 6) AS Col1 --첫번째 매개변수의 �
 
 SELECT LOWER('sample@example.com') AS Col1 --소문자
 	 , UPPER('sample@example.com') AS Col2 --대문자
-	 , INITCAP('sample@example.com') AS Col3 --구분되는 단어 첫문자만 대문자로
+	 , INITCAP('sample@example.com') AS Col3 --구분되는 단어 첫글자만 대문자로
   FROM DUAL;
 
 SELECT CONCAT('sample', 'sample@example.com') AS Col1 --문자열 더하기
@@ -125,7 +125,7 @@ SELECT SYSDATE +1 AS Col1 --그냥 +붙이면은 일에 적용된다.
 	, SYSDATE + INTERVAL '1' SECOND AS Col13
   FROM DUAL;
 
-SELECT 1234 AS Col1 --그리드를 자세히보면 테이블마다 데이터의 형이 따로따로있다! TO_CHAR는 문자(열)로 만들어준다.
+SELECT 1234 AS Col1 --그리드를 자세히보면 컬럼마다 데이터의 형이 따로따로있다! TO_CHAR는 문자(열)로 만들어준다.
 	 , TO_CHAR(1234) AS Col2
 	 , TO_CHAR(SYSDATE) AS Col3
 	 , TO_CHAR(SYSDATE, 'YYYYMMDD') AS Col4 --두번째매개변수는 출력포멧지정

@@ -1,7 +1,7 @@
 --직원 테이블
 SELECT * FROM EMPLOYEES;
 
-SELECT EMPLOYEE_ID
+SELECT EMPLOYEE_ID --내가 보고싶은컬럼 EMPLOYEE_ID , FIRST_NAME , LAST_NAME 이 3개면 이렇게 작성
 	 , FIRST_NAME
 	 , LAST_NAME
   FROM EMPLOYEES;
@@ -58,7 +58,7 @@ SELECT *
 
 SELECT *
   FROM EMPLOYEES
- WHERE FIRST_NAME LIKE 'S%'; --★S로 시작하는 이름 출력
+ WHERE FIRST_NAME LIKE 'S%'; --S로 시작하는 이름 출력
 	
 SELECT *
   FROM EMPLOYEES
@@ -78,7 +78,7 @@ SELECT *
 	
 SELECT *
   FROM EMPLOYEES
- WHERE JOB_ID LIKE '%#____' ESCAPE '#' --★이스케이프문자를 통해서 언더바 이후로 3글자인 직업 출력
+ WHERE JOB_ID LIKE '%#____' ESCAPE '#' --이스케이프문자를 통해서 언더바 이후로 3글자인 직업 출력, 특수문자 검색할때 이스케이프문자 사용
 	
 SELECT *
   FROM EMPLOYEES
@@ -90,15 +90,15 @@ SELECT *
 	
 SELECT *
   FROM EMPLOYEES
- WHERE COMMISSION_PCT IS NOT  NULL; --COMMISSION_PCT가 null이 아닌것 출력
+ WHERE COMMISSION_PCT IS NOT NULL; --COMMISSION_PCT가 null이 아닌것 출력
 	
 SELECT *
   FROM EMPLOYEES
- WHERE COMMISSION_PCT = NULL; --★이렇게해서 못찾는다 null은 IS NULL, IS NOT NULL을 사용해서 찾아야만 한다.
+ WHERE COMMISSION_PCT = NULL; --이렇게해서 못찾는다 null은 IS NULL, IS NOT NULL을 사용해서 찾아야만 한다.
 	
 SELECT *
   FROM  EMPLOYEES
- WHERE NOT EMPLOYEE_ID >= 200 --200미만 + 100 출력
+ WHERE NOT EMPLOYEE_ID >= 200 --200미만 혹은 100 출력
     OR EMPLOYEE_ID = 100;
 
 SELECT *

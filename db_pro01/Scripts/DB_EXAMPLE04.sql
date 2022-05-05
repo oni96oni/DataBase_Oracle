@@ -24,7 +24,7 @@ SELECT DEPARTMENT_ID
  GROUP BY DEPARTMENT_ID, JOB_ID
  ORDER BY DEPARTMENT_ID;
 
---★★★ FROM, WHERE, GROUP BY, HAVING, SELECT, ORDER BY 순서로 진행된다. 즉 이 순서대로 분석하고, 작성하자!
+-- FROM, WHERE, GROUP BY, HAVING, SELECT, ORDER BY 순서로 진행된다. 즉 이 순서대로 분석하고, 작성하자!
 
 SELECT COUNT(*)
 	 , DECODE(COMMISSION_PCT, NULL, 'NO', 'YES')
@@ -32,7 +32,7 @@ SELECT COUNT(*)
  GROUP BY DECODE(COMMISSION_PCT, NULL, 'NO', 'YES');
  
 
---★★1980,1990,2000년대 별로 그룹을 묶어서 평균급여와 총인원수를 구한다.
+--1980,1990,2000년대 별로 그룹을 묶어서 평균급여와 총인원수를 구한다.
 SELECT TRUNC(EXTRACT(YEAR FROM HIRE_DATE), -1) AS 년도
  	 , FLOOR(AVG(SALARY)) AS 평균급여
  	 , COUNT(*) AS 인원
@@ -89,8 +89,8 @@ SELECT DEPARTMENT_ID AS 부서
 	 								  ,'011', 300*COUNT(*)
 	 								  ,'603', 600*COUNT(*)) AS 총사용요금
   FROM EMPLOYEES
- GROUP BY DEPARTMENT_ID
- 	 , SUBSTR(PHONE_NUMBER,1,3)
+ GROUP BY ROLLUP (DEPARTMENT_ID --다수컬럼일때 ROLLUP을 해주려면 한번에 다 묶어서 해주어야 한다 하나만하는것은 X 
+ 	 , SUBSTR(PHONE_NUMBER,1,3))
  ORDER BY DEPARTMENT_ID;
  
 ROLLUP, CUBE 함수 설명
@@ -122,7 +122,7 @@ ALL       B C
             C
         ALL
 */
---★★★
+--★★★, GROUPING은 ROLLUP이나 CUBE, GROUPING SETS 등의 그룹함수에 의해 컬럼 값이 소계나 총합등 집계된 데이터일 경우 1을 리턴하고 만약 집계된 데이터가 아니면 0을 리턴하는 함수입니다.
 SELECT DEPARTMENT_ID
 	 , JOB_ID 
 	 , COUNT(*)
@@ -133,17 +133,19 @@ SELECT DEPARTMENT_ID
 	   END AS 집계구분
   FROM EMPLOYEES
  WHERE DEPARTMENT_ID IS NOT NULL
- GROUP BY CUBE(DEPARTMENT_ID, JOB_ID);
+ GROUP BY CUBE(DEPARTMENT_ID, JOB_ID)
  ORDER BY 1;
  
 --무엇을 나타내고자하는 식인가요? (아래 두개와의 차이점은?)
 --
-SELECT DEPARTMENT_ID, JOB_ID, SUM(SALARY)
-FROM EMPLOYEES
-GROUP BY DEPARTMENT_ID, JOB_ID
-ORDER BY 1;
+SELECT DEPARTMENT_ID
+	 , JOB_ID
+	 , SUM(SALARY)
+  FROM EMPLOYEES
+ GROUP BY DEPARTMENT_ID, JOB_ID
+ ORDER BY 1;
 
---무엇을 나타내고자하는 식인가요? (위 아래 와의 차이점은?)
+--무엇을 나타내고자하는 식인가요? (위 아래 와의 차이점은?) (GROUP BY에 있는 컬럼들을 오른쪽에서 왼쪽순으로 그룹 생성)
 --부서아이디별, 잡아이디별 
 SELECT DEPARTMENT_ID 
 	 , JOB_ID 
@@ -153,7 +155,7 @@ SELECT DEPARTMENT_ID
  ORDER BY 1;
 
 --무엇을 나타내고자하는 식인가요? (위 두개와의 차이점은?)
--- 위의 그리드에서 아이디별로 나뉜 잡아이디의 급여 합계를 보여주는 행 추가, 부서별아이디와 상관없이 잡아이디로 구분한 급여합계까지 같이 보여줌
+-- 위의 그리드에서 아이디별로 나뉜 잡아이디의 급여 합계를 보여주는 행 추가, 부서별아이디와 상관없이 잡아이디로 구분한 급여합계까지 같이 보여줌 ROLLUP보다 CUBE가 좀 더 상사헤가 소계를 낸다. (나올 수 있는 모든 경우의 수로 그룹 생성)
 SELECT DEPARTMENT_ID
 	 , JOB_ID
 	 , SUM(SALARY)
