@@ -1,7 +1,7 @@
 /*
 	프로시져(PROCEDURE)
 		-PL/SQL을 사용하여 DBMS시스템에서 실행할 프로그램을 만들기 위해 사용하는 객체
-		-반복되는 작업 및 복잡한 SQL 구문을 프로시져로 저장하여 재사용하는 용도로 사용될 수 있다./
+		-반복되는 작업 및 복잡한 SQL 구문을 프로시져로 저장하여 재사용하는 용도로 사용될 수 있다.
 		-DBMS에 컴파일 된 상태로 저장되고 동작하기 때문에 기존 SQL 스크립트 보다는 빠른 동작을 기대할 수 있다.
 */
 
@@ -68,3 +68,5 @@ END;
 SELECT * FROM TEST_TABLE;
 
 SELECT * FROM ALL_ERRORS WHERE NAME = 'PROC_INSERT_TEST';
+
+SELECT * FROM USER_ERRORS;
