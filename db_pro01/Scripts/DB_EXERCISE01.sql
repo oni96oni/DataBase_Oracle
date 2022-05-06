@@ -47,7 +47,7 @@ SELECT *
 FROM EMPLOYEES
 WHERE MONTHS_BETWEEN(TO_DATE(19991231), HIRE_DATE) >= 72; 
 
--- WHERE 조건에 그룹함수에대한 조건이 필요하다면 ! 바로 HAVING!!! ★★★
+-- WHERE 조건에 그룹함수에대한 조건이 필요하다면 ! 바로 HAVING!
 SELECT DEPARTMENT_ID
 	 , SUM(SALARY) 합
 	 , FLOOR(AVG(SALARY)) 평균
