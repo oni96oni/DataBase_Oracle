@@ -1,4 +1,5 @@
-SELECT ROWNUM
+-- ROWNUM : 원래 데이터에서 행번호가져오기. 원래 행번호의 기준은 뭐야?? 조회된 순서대로 순번을 매긴다.
+SELECT ROWNUM 
 	 , FIRST_NAME
 	 , LAST_NAME
 	 , SALARY
@@ -32,7 +33,7 @@ SELECT * FROM EMP_COM;
 SELECT FIRST_NAME
 	 , LAST_NAME
 	 , SALARY
-	 , RANK() OVER(ORDER BY SALARY DESC) AS 순위 --급여에 따른 순위부여( 동률이 나오면 다음순위는 누적계산 O)
+	 , RANK() OVER(ORDER BY SALARY DESC) AS 순위 --급여에 따른 순위부여( 동률이 나오면 다음순위는 누적계산 O )
   FROM EMPLOYEES;
   
 SELECT FIRST_NAME
@@ -75,23 +76,24 @@ SELECT * --JOIN하는 방법, ON을 사용하면 교집합부분 중복되어서
   JOIN DEPARTMENTS D
     ON E.DEPARTMENT_ID = D.DEPARTMENT_ID;
     
-SELECT * --JOIN하는 방법, USING을 사용하면 교집합부분 제거한뒤 출력
+SELECT * --JOIN하는 방법, USING을 사용하면 교집합부분 제거한뒤 출력(여기서는 DEPARTMENT_ID 컬럼이 두개다 제거된 뒤에 출력된다.)
   FROM EMPLOYEES E
   JOIN DEPARTMENTS D
- USING (DEPARTMENT_ID)
+ USING (DEPARTMENT_ID);
  
 --OUTER JOIN의 종류 LEFT, RIGHT, FULL 각각 왼쪽테이블기준, 오른쪽테이블기준, 양쪽모두를 기준으로
  
 SELECT *
   FROM EMPLOYEES E
   LEFT JOIN DEPARTMENTS D 
-    ON E.DEPARTMENT_ID = D.DEPARTMENT_ID 
- WHERE E.EMPLOYEE_ID = 178;
+    ON E.DEPARTMENT_ID = D.DEPARTMENT_ID; 
+ --WHERE E.EMPLOYEE_ID = 178; 여기서는 조회가능하지만 
  
 SELECT *
   FROM EMPLOYEES E
  RIGHT JOIN DEPARTMENTS D 
-    ON E.DEPARTMENT_ID = D.DEPARTMENT_ID;
+    ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+-- WHERE E.EMPLOYEE_ID = 178; 여기서는 조회가 되지 않는다.
 
 SELECT *
   FROM EMPLOYEES E
@@ -107,11 +109,11 @@ SELECT * --RIGHT
  WHERE E.DEPARTMENT_ID = D.DEPARTMENT_ID(+);  
 
 --카데시안 곱(총 개별데이터의 개수)
-SELECT COUNT(*) -- 데이터의 개수보기.
+SELECT COUNT(*) -- 총 데이터의 개수보기.
   FROM EMPLOYEES
  CROSS JOIN DEPARTMENTS;
 
-SELECT X * Y AS TOTAL --이걸 곱하면 위와 같이 나옴.
+SELECT X * Y AS TOTAL --이걸 곱하면 위와 같이 나옴. EMPLOYEES * DEPARTMENTS
   FROM (SELECT (SELECT COUNT(*) FROM EMPLOYEES) AS X --행데이터를 보는방법
 	 , (SELECT COUNT(*) FROM DEPARTMENTS) AS Y
         FROM DUAL);
@@ -119,7 +121,7 @@ SELECT X * Y AS TOTAL --이걸 곱하면 위와 같이 나옴.
 SELECT *
   FROM EMPLOYEES E 
   JOIN JOBS J 
-    ON (E.SALARY BETWEEN J.MIN_SALARY AND J.MAX_SALARY); -- NON_EQUAL JOIN 값이 같지않아도 일정 범위의 해당이 되면 JOIN 시켜라
+    ON (E.SALARY BETWEEN J.MIN_SALARY AND J.MAX_SALARY); -- NON_EQUAL JOIN 값이 같지않아도 일정 범위의 해당이 되면 JOIN 시켜라 오른쪽 끝 범위에 주목할것.
     
 SELECT * --SELF JOIN - 동일한 하나의 테이블로 JOIN하는 형식
   FROM EMPLOYEES E1
