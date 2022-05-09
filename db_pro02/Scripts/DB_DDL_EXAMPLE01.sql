@@ -71,6 +71,7 @@ CREATE TABLE sample_t (  --만들때는 대/소문자 구분안해도 괜찮아!
      , CONSTRAINT UK_SAMPLE_T_JUMIN UNIQUE(jumin)
      , CONSTRAINT FK_SAMPLE_T_REF_COL FOREIGN KEY(ref_col) REFERENCES ref_t(r_id)
 );
+
 CREATE TABLE ref_t (
        r_id NUMBER   PRIMARY KEY
      , note VARCHAR2(100)
@@ -81,12 +82,13 @@ DROP TABLE REF_T;
 
 --테이블은 이미 만들어져있는 상태에서 정의가 된 내용에 대해서 수정할것이 생겼을때 ALTER, DROP을 사용한다.
 ALTER TABLE sample_t RENAME TO sam_t;
+ALTER TABLE sam_t RENAME TO sample_t;
 
 ALTER TABLE sample_t ADD nickname VARCHAR2(100); --ADD는 추가
 ALTER TABLE sample_t MODIFY nickname VARCHAR2(200); -- MODIFY는 수정, DATA_LENGTH가 100에서 200으로 늘어남
 ALTER TABLE sample_t RENAME COLUMN nickname TO n_name; 
 ALTER TABLE sample_t DROP COLUMN n_name; --RENAME도 왠만해서는 금지! 왜? 컬럼명이 명령문에 사용되는데 바뀌면 그 전에 사용 한 컬럼명까지 바꿔주어야 에러가 발생하지 않아서, DROP 또한 왠만해서는 사용X
-ALTER TABLE sample_t MODIFY nickname NUMBER; --타입에대한 크기를 늘이고 줄이는건 상관없지만 ★★★타입을 바꾸는건 심각한 오류를 발생시킨다. 타입바꾸는건 금지!
+ALTER TABLE sample_t MODIFY nickname NUMBER; --타입에대한 크기를 늘이고 줄이는건 상관없지만 ★★타입을 바꾸는건 심각한 오류를 발생시킨다. 타입바꾸는건 금지!
 
 -- ALTER TABLE ref_t ADD UNIQUE(note);
 ALTER TABLE ref_t ADD CONSTRAINT UK_REF_T UNIQUE(note);
@@ -100,7 +102,7 @@ ALTER TABLE ref_t DROP CONSTRAINT CK_NOTE;
 -- ALTER TABLE ref_t MODIFY PRIMARY KEY(r_id, note); 이런건 안된다 지우고 다시 수정해야만 한다.
 
 -- 테이블 레벨로 제약 조건을 추가할 수 있는 PRIMARY KEY, UNIQUE, FOREIGN KEY 는 add, drop 을 사용.
-ALTER TABLE ref_t DROP CONSTRAINT UK_REF_T_NOTE DROP CONSTRAINT SYS_C0022329;
+ALTER TABLE ref_t DROP CONSTRAINT UK_REF_T_NOTE DROP CONSTRAINT SYS_C007745;
 ALTER TABLE ref_t ADD PRIMARY KEY(r_id, note);  -- 제약조건을 수정하기 위해서 기존 제약조건을 삭제 후 추가.
 
 DROP TABLE REF_T CASCADE CONSTRAINT; --제약조건까지 다 제거하는방법 CASCADE CONSTRAINT는 안쓰는게 바람직 ( 제약조건이 묶여 있으면 확인해보고 삭제 수기로 삭제하는것이 바람직)
@@ -119,3 +121,7 @@ SELECT * FROM USER_TAB_COLUMNS WHERE TABLE_NAME = 'SAMPLE_T';
 SELECT * FROM USER_COL_COMMENTS WHERE TABLE_NAME = 'SAMPLE_T';
 SELECT * FROM USER_CONSTRAINTS WHERE TABLE_NAME = 'SAMPLE_T'; --CONSTRAINT_TYPE이 키구분! P-PRIMARY, U-UNIQUE, R-REFERENCE 등등
 SELECT * FROM USER_CONSTRAINTS WHERE TABLE_NAME = 'REF_T'; --기존의 제약조건들!!
+
+SELECT * FROM USER_ERRORS;
+
+SELECT * FROM SAMPLE_T;
