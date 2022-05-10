@@ -129,4 +129,4 @@ SELECT * --SELF JOIN - 동일한 하나의 테이블로 JOIN하는 형식
     ON E1.EMPLOYEE_ID = E2.EMPLOYEE_ID;
     
 --다중 조인
-   
+SELECT * FROM DEPARTMENTS;
