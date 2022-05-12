@@ -1,0 +1,10 @@
+CREATE TABLE Menu(
+		MenuName VARCHAR(50) PRIMARY KEY
+	,	Price NUMBER
+	,	TradeName VARCHAR(50)
+	,	Location VARCHAR(50)
+);
+
+SELECT * FROM Menu;
+
+DROP TABLE Menu;
