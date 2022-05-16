@@ -1,8 +1,8 @@
 CREATE TABLE Menu(
 		MenuName VARCHAR(50) PRIMARY KEY
-	,	Price NUMBER
-	,	TradeName VARCHAR(50)
-	,	Location VARCHAR(50)
+	,	Price NUMBER NOT NULL
+	,	TradeName VARCHAR(50) NOT NULL
+	,	Location VARCHAR(50) NOT NULL
 );
 
 SELECT * FROM Menu;
