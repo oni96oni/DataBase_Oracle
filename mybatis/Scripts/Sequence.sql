@@ -1,0 +1,25 @@
+/*
+ * 	자동증가 기능을 사용하여 ID 값이 중복 없이 저장될 수 있도록 하였음
+ * 		새로운 데이터를 추가 했을 때 추가한 데이터의 ID를 알 수 없는 문제를 해결해보자
+ */
+
+SELECT SEQUENCE_NAME, MIN_VALUE, MAX_VALUE, INCREMENT_BY, CYCLE_FLAG FROM USER_SEQUENCES;
+
+--1방법 INSERT 하고 SELECT로 살펴보기
+INSERT INTO T_MYBATIS VALUES(SEQ_MYBATIS.NEXTVAL, 'test', SYSDATE);
+--현재 시퀀스의 값 검색
+SELECT SEQ_MYBATIS.CURRVAL FROM DUAL;
+SELECT * FROM T_MYBATIS WHERE ID = 71;
+
+--2방법 SELECT 하고 INSERT하기
+SELECT SEQ_MYBATIS.NEXTVAL FROM DUAL;
+INSERT INTO T_MYBATIS VALUES(SEQ_MYBATIS.CURRVAL, 'test', SYSDATE);
+SELECT * FROM T_MYBATIS WHERE ID = 85;
+
+--데이터가 추가될 때 다음과 같은 형식의 메시지가 나오도록 한다. 'ID가 1 인 데이터가 추가 되었습니다.'
+
+SET OUTPUTSERVER ON 
+
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('ID가 ' || SEQ_MYBATIS.NEXTVAL || '데이터가 추가 되었습니다.');
+END;
