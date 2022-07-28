@@ -1,0 +1,301 @@
+CREATE TABLE T_MYBATIS (
+	   id NUMBER
+	 , name VARCHAR2(100)
+	 , today DATE
+);
+
+ALTER TABLE T_MYBATIS ADD CONSTRAINT T_MYBATIS_ID_PK PRIMARY KEY(ID);
+
+SELECT * FROM T_MYBATIS;
+DELETE FROM T_MYBATIS;
+grant create session to puser1;
+CREATE SEQUENCE SEQ_MYBATIS;
+
+INSERT INTO T_MYBATIS VALUES(SEQ_MYBATIS.NEXTVAL, 'test', SYSDATE)
+
+SELECT * FROM T_MYBATIS;
+DELETE FROM T_MYBATIS;
+
+SELECT EMPLOYEE_ID
+	 , FIRST_NAME
+	 , LAST_NAME
+	 , SALARY 
+  FROM EMPLOYEES
+ WHERE SALARY >= 10000
+   AND DEPARTMENT_ID IN (80, 90, 100)
+   AND HIRE_DATE BETWEEN TO_DATE('1990/01/01') AND TO_DATE('1999/12/31'); 
+   
+SELECT MANAGER_ID FROM EMPLOYEES;
+SELECT * FROM DEPARTMENTS;
+SELECT * FROM LOCATIONS;
+SELECT * FROM COUNTRIES WHERE COUNTRY_ID = 'AR';
+SELECT COUNT(*) 
+		  FROM COUNTRIES
+		 WHERE COUNTRY_ID = 'AR';
+SELECT LOCATION_ID FROM LOCATIONS WHERE LOCATION_ID = 1000;
+
+SELECT COUNT(*) AS TOTAL
+	 , D.DEPARTMENT_NAME
+	 , D.DEPARTMENT_ID
+  FROM EMPLOYEES E
+  JOIN DEPARTMENTS D
+    ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+-- WHERE D.DEPARTMENT_ID = 30
+-- WHERE D.DEPARTMENT_ID IN (10, 20, 30, 40)
+ WHERE D.DEPARTMENT_ID BETWEEN 10 AND 40
+ GROUP BY D.DEPARTMENT_ID, D.DEPARTMENT_NAME;\
+ 
+ SELECT * FROM EMPLOYEES;
+ SELECT * FROM LOCATIONS;
+ SELECT * FROM DEPARTMENTS;
+SELECT LOCATION_ID AS locsId
+	 , STREET_ADDRESS AS strAdd
+	 , POSTAL_CODE AS posCode
+	 , CITY AS city
+	 , STATE_PROVINCE AS staPro
+	 , COUNTRY_ID AS conId
+  FROM LOCATIONS;
+		 
+SELECT LOCATION_ID AS locsId
+	 , STREET_ADDRESS AS strAdd
+	 , POSTAL_CODE AS posCode
+	 , CITY AS city
+	 , STATE_PROVINCE AS staPro
+	 , COUNTRY_ID AS conId	  
+  FROM LOCATIONS	 
+ WHERE LOCATION_ID = 1000;
+
+SELECT MANAGER_ID FROM EMPLOYEES;
+
+SELECT *
+  FROM (SELECT ROWNUM AS RN
+             , DEPARTMENT_ID AS deptId
+             , DEPARTMENT_NAME AS deptName
+             , MANAGER_ID AS mngId
+             , LOCATION_ID AS locId
+          FROM DEPARTMENTS
+       )
+ WHERE RN BETWEEN 1 AND 10
+ ORDER BY deptId;
+
+SELECT *
+		  FROM (SELECT ROWNUM AS RN
+		             , DEPARTMENT_ID AS deptId
+		             , DEPARTMENT_NAME AS deptName
+		             , MANAGER_ID AS mngId
+		             , LOCATION_ID AS locId
+		          FROM DEPARTMENTS
+		       )
+		 WHERE RN BETWEEN #{start} AND #{end}
+		 ORDER BY #{sort}
+		 
+INSERT INTO LOCATIONS
+VALUES (1000,'SORAE','21665','INCHEON','NAMDONG','KO');
+
+ALTER TABLE LOCATIONS
+DROP CONSTRAINT LOC_ID_PK;
+
+SELECT 
+	CONSTRAINT_NAME
+    ,CONSTRAINT_TYPE
+    , TABLE_NAME
+    ,R_CONSTRAINT_NAME  
+FROM USER_CONSTRAINTS 
+WHERE TABLE_NAME = LOCATION_ID;
+
+CREATE SEQUENCE SEQ_BOARDNUM;
+
+INSERT INTO board VALUES(SEQ_BOARDNUM.NEXTVAL, 'writer', 'title', 'content');
+
+CREATE TABLE board(
+    boardnum NUMBER,
+    boardwriter VARCHAR2(20) NOT NULL,
+    boardtitle VARCHAR2(50) NOT NULL,
+    boardcontent VARCHAR2(2000) NOT NULL,
+    boarddate DATE DEFAULT SYSDATE,
+    CONSTRAINT board_pk PRIMARY KEY(boardnum)
+);
+
+comment on TABLE  board is '게시판';
+COMMENT ON COLUMN board.boardnum IS '게시판 번호';
+COMMENT ON COLUMN board.boardwriter IS '게시판 작성자';
+COMMENT ON COLUMN board.boardtitle IS '게시판 제목';
+COMMENT ON COLUMN board.boardcontent IS '게시판 내용';
+COMMENT ON COLUMN board.boarddate IS '게시판 작성일';
+
+SELECT * FROM BOARD;
+
+SELECT * FROM EMPLOYEES;
+SELECT * FROM LOCATIONS;
+select * from all_all_tables;
+SELECT * FROM REGIONS;
+SELECT * FROM JOB_HISTORY;
+​SELECT E.EMPLOYEE_ID AS empId
+	 , CONCAT(FIRST_NAME, '' || LAST_NAME) AS empName
+	 , CONCAT(E.EMAIL, '@emp.com') AS email
+	 , J.JOB_TITLE AS jobName
+	 , J.JOB_ID AS jobId
+	 , D.DEPARTMENT_NAME AS deptName
+	 , D.DEPARTMENT_ID AS deptId
+  FROM EMPLOYEES E
+  JOIN JOBS J 
+    ON E.JOB_ID = J.JOB_ID
+  JOIN DEPARTMENTS D 
+  	ON E.DEPARTMENT_ID = D.DEPARTMENT_ID;
+  
+  SELECT  RN
+			 , empId
+			 , empName
+			 , email
+			 , jobName
+			 , jobId
+			 , deptName
+			 , deptId
+		  FROM (SELECT ROWNUM AS RN
+		  			 , E.EMPLOYEE_ID AS empId
+					 , CONCAT(FIRST_NAME, '' || LAST_NAME) AS empName
+					 , CONCAT(E.EMAIL, '@emp.com') AS email
+					 , J.JOB_TITLE AS jobName
+					 , J.JOB_ID AS jobId
+					 , D.DEPARTMENT_NAME AS deptName
+					 , D.DEPARTMENT_ID AS deptId
+				  FROM EMPLOYEES E
+				  JOIN JOBS J 
+				    ON E.JOB_ID = J.JOB_ID
+				  JOIN DEPARTMENTS D 
+				  	ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+				  	)
+		WHERE RN BETWEEN 1 AND 50;
+  	
+SELECT E.EMPLOYEE_ID AS empId
+			 , CONCAT(FIRST_NAME, '' || LAST_NAME) AS empName
+			 , CONCAT(E.EMAIL, '@emp.com') AS email
+			 , J.JOB_TITLE AS jobName
+			 , J.JOB_ID AS jobId
+			 , D.DEPARTMENT_NAME AS deptName
+			 , D.DEPARTMENT_ID AS deptId
+		  FROM EMPLOYEES E
+		  JOIN JOBS J 
+		    ON E.JOB_ID = J.JOB_ID
+		  JOIN DEPARTMENTS D 
+		  	ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+		 WHERE E.EMPLOYEE_ID = 100
+		   AND E.DEPARTMENT_ID = Executive
+		   AND E.FIRST_NAME = 'Steven'
+		   AND E.LAST_NAME = 'king';
+SELECT * FROM EMPLOYEES e ;
+SELECT * FROM DEPARTMENTS;
+SELECT * FROM JOBS j;
+desc FIRST_NAME;
+
+INSERT INTO EMPLOYEES
+VALUES (207, 'CHA', 'SION', 'ONI2', '515.123.4567', TO_DATE(20220718), 'IT_PROG', 25000, 0.05, 100,  60);
+
+DELETE FROM EMPLOYEES
+		 WHERE EMPLOYEE_ID = 777;
+
+SELECT RN
+			 , empId
+			 , empName
+			 , email
+			 , jobName
+			 , jobId
+			 , deptName
+			 , deptId
+		  FROM (SELECT ROWNUM AS RN
+		  			 , E.EMPLOYEE_ID AS empId
+					 , CONCAT(FIRST_NAME, '' || LAST_NAME) AS empName
+					 , CONCAT(E.EMAIL, '@emp.com') AS email
+					 , J.JOB_TITLE AS jobName
+					 , J.JOB_ID AS jobId
+					 , D.DEPARTMENT_NAME AS deptName
+					 , D.DEPARTMENT_ID AS deptId
+				  FROM EMPLOYEES E
+				  JOIN JOBS J 
+				    ON E.JOB_ID = J.JOB_ID
+				  JOIN DEPARTMENTS D 
+				  	ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+				  	)
+		WHERE empId = 777;
+		
+SELECT EMPLOYEE_ID AS empId
+		     , HIRE_DATE AS hireDate
+		     , PHONE_NUMBER AS phone
+		     , SALARY AS salary
+		     , COMMISSION_PCT AS commission
+		  FROM EMPLOYEES
+		 WHERE EMPLOYEE_ID = 777;
+		 
+SELECT *
+	 	  FROM (SELECT RN
+					 , empId
+					 , empName
+					 , email
+					 , jobName
+					 , jobId
+					 , deptName
+					 , deptId
+				  FROM (SELECT ROWNUM AS RN
+				  			 , E.EMPLOYEE_ID AS empId
+							 , CONCAT(FIRST_NAME, '' || LAST_NAME) AS empName
+							 , CONCAT(E.EMAIL, '@emp.com') AS email
+							 , J.JOB_TITLE AS jobName
+							 , J.JOB_ID AS jobId
+							 , D.DEPARTMENT_NAME AS deptName
+							 , D.DEPARTMENT_ID AS deptId
+						  FROM EMPLOYEES E
+						  JOIN JOBS J 
+						    ON E.JOB_ID = J.JOB_ID
+						  JOIN DEPARTMENTS D 
+						  	ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+						)
+				)
+		WHERE RN BETWEEN 1 AND 150;
+		
+SELECT MIN_SALARY AS minSalary
+	 , MAX_SALARY AS maxSalary
+  FROM JOBS
+ WHERE JOB_ID = 'AD_PRES';
+SELECT * FROM EMPLOYEES;
+SELECT * FROM JOBS;
+
+--권한 테이블 만들기
+
+CREATE TABLE PERMISSIONS (
+	   empId 		NUMBER
+	 , tableName 	VARCHAR2(100)
+	 , pRead 		VARCHAR2(1) DEFAULT('N') CHECK(pRead 	IN ('Y', 'N'))
+	 , pAdd 		VARCHAR2(1) DEFAULT('N') CHECK(pAdd 	IN ('Y', 'N'))
+	 , pUpdate 		VARCHAR2(1) DEFAULT('N') CHECK(pUpdate 	IN ('Y', 'N'))
+	 , pDelete 		VARCHAR2(1) DEFAULT('N') CHECK(pDelete 	IN ('Y', 'N'))
+	 , CONSTRAINT PERMISSIONS_EMPID_TABLENAME_PK PRIMARY KEY(empId, tableName)
+);
+
+INSERT INTO PERMISSIONS(empId, tableName)
+SELECT EMPLOYEE_ID AS EMPID 
+	 , 'employees' AS tableName
+  FROM EMPLOYEES;
+ 
+ INSERT INTO PERMISSIONS(empId, tableName)
+SELECT EMPLOYEE_ID AS EMPID 
+	 , 'departments' AS tableName
+  FROM EMPLOYEES;
+ 
+ INSERT INTO PERMISSIONS(empId, tableName)
+SELECT EMPLOYEE_ID AS EMPID 
+	 , 'locations' AS tableName
+  FROM EMPLOYEES;
+ 
+ INSERT INTO PERMISSIONS(empId, tableName)
+SELECT EMPLOYEE_ID AS EMPID 
+	 , 'jobs' AS tableName
+  FROM EMPLOYEES;
+ 
+ SELECT * 
+  FROM PERMISSIONS
+ WHERE EMPID = 100;
+
+UPDATE PERMISSIONS 
+   SET pread = 'y'
+ WHERE EMPID = 100
+   AND TABLENAME IN ('job');
